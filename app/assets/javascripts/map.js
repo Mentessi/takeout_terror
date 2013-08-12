@@ -88,10 +88,10 @@ $(document).ready(function(){
     console.log(lng);
 
     if (document.location.hostname == "localhost") {
-      $.getJSON("http://localhost:3000/location/ratings.json?long=" + lng + "&lat=" + lat, plotData); //getJSON //arrays
+      $.getJSON("http://localhost:3000/locations/ratings.json?long=" + lng + "&lat=" + lat, plotData); //getJSON //arrays
     }
     else {
-      $.getJSON("http://killer-kebab-hunter.herokuapp.com/location/ratings.json?long=" + lng + "&lat=" + lat, plotData);  // getJSON //arrays
+      $.getJSON("http://takeout-terror.herokuapp.com/locations/ratings.json?long=" + lng + "&lat=" + lat, plotData);  // getJSON //arrays
     }
   } //plotPlaces
 
