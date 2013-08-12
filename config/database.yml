@@ -8,8 +8,7 @@ development:
   encoding: unicode
   host: localhost
   database: takeout_terror_development
-  username: neilatkinson
-  password:
+
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
@@ -19,5 +18,5 @@ test:
   encoding: unicode
   host: localhost
   database: takeout_terror_test
-  username: neilatkinson
-  password:
+
+
