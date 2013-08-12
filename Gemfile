@@ -44,4 +44,17 @@ end
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-gem 'rspec-rails'
+
+
+gem 'rest-client'
+
+group :test, :development do 
+	gem 'rspec-rails'
+	gem 'capybara'
+	gem 'factory_girl_rails'
+	gem 'database_cleaner'
+	gem 'email_spec'
+end
+
+gem 'devise'
+
