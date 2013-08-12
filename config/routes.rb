@@ -1,12 +1,12 @@
 TakeoutTerror::Application.routes.draw do
 
-  authenticated :user do
-    root to: "locations#initial_home", as: "authenticated_root"
-  end
-
   devise_for :users
+  authenticated :user do
+    get '/user' => "users#show", as: "user_root"
+  end
+  resources :users, only: [:index, :show]
   get '/locations/ratings', to: 'locations#ratings'
-  root to: "locations#initial_home", as: "unauthenticated_root"
+  root to: "locations#initial_home"
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 
