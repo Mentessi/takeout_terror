@@ -2,7 +2,7 @@ TakeoutTerror::Application.routes.draw do
 
   devise_for :users
   authenticated :user do
-    get '/user' => "users#show", as: "user_root"
+    get '/' => "users#show", as: "user_root"
   end
   resources :users, only: [:index, :show]
   get '/locations/ratings', to: 'locations#ratings'
