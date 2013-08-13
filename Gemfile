@@ -51,6 +51,7 @@ gem 'rest-client'
 group :test, :development do 
 	gem 'rspec-rails'
 	gem 'capybara'
+  gem 'selenium-webdriver'
 	gem 'factory_girl_rails'
 	gem 'database_cleaner'
 	gem 'email_spec'
