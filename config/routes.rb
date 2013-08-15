@@ -1,5 +1,7 @@
 TakeoutTerror::Application.routes.draw do
 
+  get "establishments/show"
+  get "establishments/index"
   devise_for :users
   authenticated :user do
     get '/' => "users#show", as: "user_root"
