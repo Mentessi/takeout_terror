@@ -2,13 +2,14 @@ TakeoutTerror::Application.routes.draw do
 
   get "establishments/show"
   get "establishments/index"
-  devise_for :users
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   authenticated :user do
     get '/' => "users#show", as: "user_root"
   end
   resources :users, only: [:index, :show]
   get '/locations/ratings', to: 'locations#ratings'
   root to: "locations#initial_home"
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
 

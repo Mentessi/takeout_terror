@@ -3,13 +3,13 @@ require 'spec_helper'
 describe "users/index.html.erb" do
    it "should show all the users details" do 
   	assign(:users, 
-  		[stub_model(User, :first_name => "michael", 
+  		[stub_model(User, :name => "michael mentessi", 
   											:email => "michael@example.com",
   											:created_at => DateTime.new(2001,2,3)),
-  		stub_model(User, 	:first_name => "dave", 
+  		stub_model(User, 	:name => "dave smith", 
   											:email => "dave@example.com",
   											:created_at => DateTime.new(2010,2,3)),
-  		stub_model(User, 	:first_name => "neil", 
+  		stub_model(User, 	:name => "neil atkinson", 
   											:email => "neil@example.com",
   											:created_at => DateTime.new(2020,2,3))
   		])

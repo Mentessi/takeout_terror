@@ -5,8 +5,7 @@ feature "Signing up" do
     scenario "with valid details" do
       visit '/'
       click_link 'Sign up'
-      fill_in 'First name', :with => 'John'
-      fill_in 'Last name', :with => 'Smith'
+      fill_in 'Name', :with => 'John Smith'
       fill_in 'Email', :with => 'user34@example.com'
       fill_in 'Password', :with => 'password'
       fill_in 'Password confirmation', :with => 'password'
@@ -17,8 +16,7 @@ feature "Signing up" do
     scenario "invalid details are provided" do
       visit '/'
       click_link 'Sign up'
-      fill_in 'First name', :with => 'John'
-      fill_in 'Last name', :with => 'Smith'
+      fill_in 'Name', :with => 'John Smith'
       fill_in 'Email', :with => 'invalid@h'
       fill_in 'Password', :with => 'password'
       fill_in 'Password confirmation', :with => 'password'
@@ -30,15 +28,13 @@ feature "Signing up" do
 
   context "with an email that is already registered" do
     scenario "but with valid details" do
-      User.create!( :first_name => 'Mike', 
-                  :last_name => 'Mental', 
+      User.create!( :name => 'Mike Mike', 
                   :email => 'user34@example.com', 
                   :password => 'password',
                   :password_confirmation => 'password')
       visit '/'
       click_link 'Sign up'
-      fill_in 'First name', :with => 'John'
-      fill_in 'Last name', :with => 'Smith'
+      fill_in 'Name', :with => 'John Smith'
       fill_in 'Email', :with => 'user34@example.com'
       fill_in 'Password', :with => 'password'
       fill_in 'Password confirmation', :with => 'password'
@@ -51,8 +47,7 @@ end
 
 feature "Signing in" do
   before(:each) do
-    User.create!( :first_name => 'Mike', 
-                  :last_name => 'Mental', 
+    User.create!( :name => 'Mike Mike',  
                   :email => 'user34@example.com', 
                   :password => 'password',
                   :password_confirmation => 'password')
@@ -88,8 +83,7 @@ end
 
 feature "Logging Out" do
   before(:each) do
-    User.create!( :first_name => 'Mike', 
-                  :last_name => 'Mental', 
+    User.create!( :name => 'Mike Mike', 
                   :email => 'user34@example.com', 
                   :password => 'password',
                   :password_confirmation => 'password')
@@ -109,8 +103,7 @@ end
 
 feature "Editing account" do
   before(:each) do
-    User.create!( :first_name => 'Mike', 
-                  :last_name => 'Mental', 
+    User.create!( :name => 'Mike Mike', 
                   :email => 'user34@example.com', 
                   :password => 'password',
                   :password_confirmation => 'password')

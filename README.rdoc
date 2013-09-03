@@ -1,3 +1,8 @@
-== README
+=Takeout-Terror
 
-Takeout-Terror
+==Environmental variables required
+
+this app assumes the set up of the following environmental variables:
+
+	* FACEBOOK_APP
+	* FACEBOOK_SECRET
