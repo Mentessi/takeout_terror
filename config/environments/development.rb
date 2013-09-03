@@ -14,7 +14,21 @@ TakeoutTerror::Application.configure do
   config.action_controller.perform_caching = false
 
   # Don't care if the mailer can't send.
-  config.action_mailer.raise_delivery_errors = false
+  config.action_mailer.raise_delivery_errors = true
+  
+  # Want to actually send emails?
+  config.action_mailer.perform_deliveries = true
+
+  # Configure the mailer settings
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.smtp_settings = {
+   :address              => "smtp.gmail.com",
+   :port                 => 587,
+   :domain               => 'domain.com',
+   :user_name            => ENV['MAILER_USER_NAME'],
+   :password             => ENV['MAILER_PASSWORD'],
+   :authentication       => :plain,
+   :enable_starttls_auto => true  }
 
   # required for devise
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
