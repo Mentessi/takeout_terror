@@ -10,9 +10,9 @@ TakeoutTerror::Application.configure do
   # Configure the mailer settings
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.smtp_settings = {
-   :address              => "smtp.gmail.com",
+   :address              => "smtp.sendgrid.net",
    :port                 => 587,
-   :domain               => 'domain.com',
+   :domain               => ENV['MAILER_DOMAIN'],
    :user_name            => ENV['MAILER_USER_NAME'],
    :password             => ENV['MAILER_PASSWORD'],
    :authentication       => :plain,

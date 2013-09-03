@@ -20,15 +20,18 @@ TakeoutTerror::Application.configure do
   config.action_mailer.perform_deliveries = true
 
   # Configure the mailer settings
+  # config.action_mailer.delivery_method = :smtp
+  # config.action_mailer.smtp_settings = {
+  #  :address              => "smtp.gmail.com",
+  #  :port                 => 587,
+  #  :domain               => ENV['MAILER_DOMAIN'],
+  #  :user_name            => ENV['MAILER_USER_NAME'],
+  #  :password             => ENV['MAILER_PASSWORD'],
+  #  :authentication       => :plain,
+  #  :enable_starttls_auto => true  }
+
   config.action_mailer.delivery_method = :smtp
-  config.action_mailer.smtp_settings = {
-   :address              => "smtp.gmail.com",
-   :port                 => 587,
-   :domain               => 'domain.com',
-   :user_name            => ENV['MAILER_USER_NAME'],
-   :password             => ENV['MAILER_PASSWORD'],
-   :authentication       => :plain,
-   :enable_starttls_auto => true  }
+  config.action_mailer.smtp_settings = {:address => "localhost", :port => 1025}
 
   # required for devise
   config.action_mailer.default_url_options = { :host => 'localhost:3000' }
