@@ -154,8 +154,8 @@ feature "Signing up" do
       OmniAuth.config.mock_auth[:google_oauth2] = :invalid_credentials
       visit '/'
       click_link 'Sign up'
-      click_link 'Sign in with Facebook'
-      expect(page).to have_content 'Could not authenticate you from Facebook because'
+      click_link 'Sign in with Google Oauth2'
+      expect(page).to have_content 'Could not authenticate you from GoogleOauth2 because'
       expect(User.count).to eq 0
     end
   end
