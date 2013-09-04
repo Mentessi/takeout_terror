@@ -6,15 +6,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:facebook,:google_oauth2]
 
-
-  def self.find_for_facebook_oauth(auth, signed_in_resource=nil)
-	  find_for_oauth(auth, signed_in_resource=nil)
-	end
-
-	def self.find_for_google_oauth2(auth, signed_in_resource=nil)
-		find_for_oauth(auth, signed_in_resource=nil)
-	end
-
 	def self.find_for_oauth(auth, signed_in_resource=nil)
 		User.where(:provider => auth.provider, :uid => auth.uid).first ||
 	  User.where(:email => auth[:extra][:raw_info][:email]).first ||
