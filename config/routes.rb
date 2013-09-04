@@ -2,7 +2,7 @@ TakeoutTerror::Application.routes.draw do
 
   get "establishments/show"
   get "establishments/index"
-  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks",                                   :registrations => "registrations" }
   authenticated :user do
     get '/' => "users#show", as: "user_root"
   end

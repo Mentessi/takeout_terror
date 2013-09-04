@@ -298,20 +298,39 @@ feature "Editing account" do
     expect(page).to have_content 'Signed in successfully'
   end
 
-  scenario "with valid details" do
-    click_link 'Edit account'
-    fill_in 'Email', :with => 'user34@example.com'
-    fill_in 'Current password', :with => 'password'
-    click_button 'Update'
-    expect(page).to have_content 'You updated your account successfully'
+  context "with current password provided" do
+    scenario "when changing the email address" do
+      click_link 'Edit account'
+      fill_in 'Email', :with => 'user34@example.com'
+      fill_in 'Current password', :with => 'password'
+      click_button 'Update'
+      expect(page).to have_content 'You updated your account successfully'
+    end
   end
 
-  scenario "no password is entered" do
-    click_link 'Edit account'
-    fill_in 'Email', :with => 'user34@example.com'
-    click_button 'Update'
-    expect(page).to have_content '1 error prohibited this user from being saved:'
-    expect(page).to have_content "Current password can't be blank"
+  context "no password is entered" do
+    scenario "when changing the email address" do
+      click_link 'Edit account'
+      fill_in 'Email', :with => 'user36@example.com'
+      click_button 'Update'
+      expect(page).to have_content '1 error prohibited this user from being saved:'
+      expect(page).to have_content "Current password can't be blank"
+    end
+
+    scenario "when changing password" do
+      click_link 'Edit account'
+      fill_in 'Password', :with => 'newpassword'
+      fill_in 'Password confirmation', :with => 'newpassword'
+      click_button 'Update'
+      expect(page).to have_content 'You updated your account successfully.'
+    end
+
+    scenario "when changing account fields other than password and email" do
+      click_link 'Edit account'
+      fill_in 'Name', :with => 'New Name'
+      click_button 'Update'
+      expect(page).to have_content 'You updated your account successfully.'
+    end
   end
 
   scenario "cancelling account", :js => true do
