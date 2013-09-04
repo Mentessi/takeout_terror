@@ -48,14 +48,18 @@ end
 
 gem 'rest-client'
 
-group :test, :development do 
+group :test do 
 	gem 'rspec-rails'
+  gem 'cucumber-rails'
 	gem 'capybara'
   gem 'selenium-webdriver'
 	gem 'factory_girl_rails'
 	gem 'database_cleaner'
 	gem 'email_spec'
-	gem 'mailcatcher'
+end
+
+group :development do
+  gem 'mailcatcher'
 end
 
 gem 'devise'
