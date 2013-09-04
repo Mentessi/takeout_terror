@@ -49,6 +49,7 @@ end
 gem 'rest-client'
 
 group :test, :development do 
+	gem 'debugger'
 	gem 'rspec-rails'
 	gem 'capybara'
   gem 'selenium-webdriver'
@@ -63,4 +64,5 @@ gem 'devise'
 gem 'omniauth'
 
 gem 'omniauth-facebook'
+gem 'omniauth-google-oauth2'
 
