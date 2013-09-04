@@ -103,4 +103,60 @@ feature "Signing up" do
       expect(User.count).to eq 0
     end
   end
+
+  context "via Google" do
+    scenario "with valid credentials" do
+      expect(User.count).to eq 0
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:google_oauth2] = OmniAuth::AuthHash.new({
+          :provider => "google_oauth2",
+          :uid => "123456",
+          :info => {
+              :name => "Neil Neil",
+              :email => "user40@example.com",
+              :first_name => "Neil",
+              :last_name => "Neil",
+              :image => "https://lh3.googleusercontent.com/url/photo.jpg"
+          },
+          :credentials => {
+              :token => "token",
+              :refresh_token => "another_token",
+              :expires_at => 1354920555,
+              :expires => true
+          },
+          :extra => {
+              :raw_info => {
+                  :id => "123456",
+                  :email => "user40@example.com",
+                  :verified_email => true,
+                  :name => "Neil Neil",
+                  :given_name => "Neil",
+                  :family_name => "Neil",
+                  :link => "https://plus.google.com/123456789",
+                  :picture => "https://lh3.googleusercontent.com/url/photo.jpg",
+                  :gender => "male",
+                  :birthday => "0000-06-25",
+                  :locale => "en",
+                  :hd => "company_name.com"
+              }
+          }
+      })
+      visit '/'
+      click_link 'Sign up'
+      click_link 'Sign in with Google Oauth2'
+      expect(page).to have_content 'Successfully authenticated from Google account.'
+      expect(User.count).to eq 1
+    end
+
+    scenario "with INvalid credentials" do
+      expect(User.count).to eq 0
+      OmniAuth.config.test_mode = true
+      OmniAuth.config.mock_auth[:google_oauth2] = :invalid_credentials
+      visit '/'
+      click_link 'Sign up'
+      click_link 'Sign in with Facebook'
+      expect(page).to have_content 'Could not authenticate you from Facebook because'
+      expect(User.count).to eq 0
+    end
+  end
 end
