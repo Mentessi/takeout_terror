@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 feature "Signing up" do
+
   context "for the first time" do
     scenario "with valid details" do
       visit '/'
@@ -26,6 +27,7 @@ feature "Signing up" do
     end
   end
 
+
   context "with an email that is already registered" do
     scenario "but with valid details" do
       User.create!( :name => 'Mike Mike', 
@@ -43,6 +45,7 @@ feature "Signing up" do
       expect(page).to have_content 'Email has already been taken'
     end
   end
+
 
   context "via facebook" do
     scenario "with valid credentials" do
@@ -104,6 +107,7 @@ feature "Signing up" do
     end
   end
 
+
   context "via Google" do
     scenario "with valid credentials" do
       expect(User.count).to eq 0
@@ -148,6 +152,7 @@ feature "Signing up" do
       expect(User.count).to eq 1
     end
 
+
     scenario "with INvalid credentials" do
       expect(User.count).to eq 0
       OmniAuth.config.test_mode = true
@@ -160,7 +165,8 @@ feature "Signing up" do
     end
   end
 
-  context "logging in for the first time with a new social media oauth provider" do
+
+  context "signin in for the first time with a new social media oauth provider" do
     scenario "where no email address is returned by omniauth provider" do
       expect(User.count).to eq 0
       OmniAuth.config.test_mode = true

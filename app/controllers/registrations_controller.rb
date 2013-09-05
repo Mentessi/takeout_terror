@@ -8,7 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
     else
       update_selected_attributes(params, @user)
     end
-
+    
     if successfully_updated
       set_flash_message :notice, :updated
       # Sign in the user bypassing validation in case his password changed
