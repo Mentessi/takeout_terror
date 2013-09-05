@@ -55,15 +55,29 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   end
 
   def new_with_omniauth
-    @user = User.new(name: params[:user][:name], email: params[:user][:email], password: Devise.friendly_token[0,20])
+    email = params[:user][:email]
+    name = params[:user][:name]
     @provider = params[:provider]
     @uid = params[:uid]
-    if @user.save
+    
+    # find by the email address entered
+    # if found create new identity for the found user
+    @user = User.find_by_email(email)
+    if @user
+      # map this new login method via a service provider to an existing account if the email address is the same
+      # AND THE PASSWORD ENTERED MATCHES
       @user.omniauth_identities.create(:provider => @provider, :uid => @uid)
-      flash[:notice] = 'Your account has been created via ' + PROVIDERS[@provider] + '. In your profile you can change your personal information and amend your local password from the one we have randomly generated for you.'
+      flash[:notice] = 'Sign in via ' + PROVIDERS[@provider] + ' has been added to your account. Signed in successfully!'
       sign_in_and_redirect(:user, @user)
     else
-      render 'devise/registrations/new_with_omniauth'
+      @user = User.new(name: name, email: email, password: Devise.friendly_token[0,20])
+      if @user.save
+        @user.omniauth_identities.create(:provider => @provider, :uid => @uid)
+        flash[:notice] = 'Your account has been created via ' + PROVIDERS[@provider] + '. In your profile you can change your personal information and amend your local password from the one we have randomly generated for you.'
+        sign_in_and_redirect(:user, @user)
+      else
+        render 'devise/registrations/new_with_omniauth'
+      end
     end
   end
 
