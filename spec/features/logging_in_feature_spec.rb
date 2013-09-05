@@ -2,22 +2,20 @@ require 'spec_helper'
 
 feature "Logging in" do
   before(:each) do
-    User.create!( :name => 'Mike Mike',  
+    mike = User.create!( :name => 'Mike Mike',  
                   :email => 'user34@example.com', 
                   :password => 'password',
                   :password_confirmation => 'password')
-    User.create!( :name => 'Ted Ted',  
+    ted = User.create!( :name => 'Ted Ted',  
                   :email => 'user50@example.com',
-                  :provider => 'facebook',
                   :password => 'password',
-                  :password_confirmation => 'password',
-                  :uid => '654321')
-    User.create!( :name => 'Neil Neil',  
+                  :password_confirmation => 'password')
+    ted.omniauth_identities.create(:provider => 'facebook', :uid => '654321')
+    neil = User.create!( :name => 'Neil Neil',  
                   :email => 'user40@example.com',
-                  :provider => 'google_oauth2',
                   :password => 'password',
-                  :password_confirmation => 'password',
-                  :uid => '123456')
+                  :password_confirmation => 'password')
+    neil.omniauth_identities.create(:provider => 'google_oauth2', :uid => '123456')
     visit '/'
     click_link 'Login'
   end
@@ -98,7 +96,7 @@ feature "Logging in" do
         visit '/'
         click_link 'Sign up'
         click_link 'Sign in with Facebook'
-        expect(page).to have_content 'Successfully authenticated from Facebook account.'
+        expect(page).to have_content 'Sign in via Facebook has been added to your account. Signed in successfully!'
         expect(User.count).to eq 3
       end
     end
@@ -147,7 +145,7 @@ feature "Logging in" do
         visit '/'
         click_link 'Sign up'
         click_link 'Sign in with Facebook'
-        expect(page).to have_content 'Successfully authenticated from Facebook account.'
+        expect(page).to have_content 'Signed in successfully via Facebook.'
         expect(User.count).to eq 3
       end
     end
@@ -192,7 +190,7 @@ feature "Logging in" do
         visit '/'
         click_link 'Sign up'
         click_link 'Sign in with Google Oauth2'
-        expect(page).to have_content 'Successfully authenticated from Google account.'
+        expect(page).to have_content 'Signed in successfully via Google.'
         expect(User.count).to eq 3
       end
     end
@@ -249,8 +247,111 @@ feature "Logging in" do
         visit '/'
         click_link 'Sign up'
         click_link 'Sign in with Google Oauth2'
-        expect(page).to have_content 'Successfully authenticated from Google account.'
+        expect(page).to have_content 'Sign in via Google has been added to your account. Signed in successfully!'
         expect(User.count).to eq 3
       end
     end
+
+    context "having signed up with facebook" do 
+      context "having subsequently changed the email registered with facebook" do
+      scenario "signing in with facebook" do
+        expect(User.count).to eq 3
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new({
+            :provider => 'facebook',
+            :uid => '654321',
+            :info => {
+              :nickname => 'NTed',
+              :email => 'DIFFERENT@example.com',
+              :name => 'Ted Ted',
+              :first_name => 'Ted',
+              :last_name => 'Ted',
+              :image => 'http://graph.facebook.com/1234567/picture?type=square',
+              :urls => { :Facebook => 'http://www.facebook.com/jbloggs' },
+              :location => 'Palo Alto, California',
+              :verified => true
+            },
+            :credentials => {
+              :token => 'ABCDEF', # OAuth 2.0 access_token, which you may wish to store
+              :expires_at => 1321747205, # when the access token expires (it always will)
+              :expires => true # this will always be true
+            },
+            :extra => {
+              :raw_info => {
+                :id => '654321',
+                :name => 'Ted Ted',
+                :first_name => 'Ted',
+                :last_name => 'Ted',
+                :link => 'http://www.facebook.com/jbloggs',
+                :username => 'NTed',
+                :location => { :id => '123456789', :name => 'Palo Alto, California' },
+                :gender => 'male',
+                :email => 'DIFFERENT@example.com',
+                :timezone => -8,
+                :locale => 'en_US',
+                :verified => true,
+                :updated_time => '2011-11-11T06:21:03+0000'
+              }
+            }
+        })
+        visit '/'
+        click_link 'Sign up'
+        click_link 'Sign in with Facebook'
+        expect(page).to have_content 'Signed in successfully via Facebook.'
+        expect(User.count).to eq 3
+      end
+    end
+  end
+
+    context "having signed up" do 
+      context "logging in for the first time with a new social media oauth provider" do
+      scenario "where no email address is returned by omniauth provider" do
+        expect(User.count).to eq 3
+        OmniAuth.config.test_mode = true
+        OmniAuth.config.mock_auth[:facebook] = OmniAuth::AuthHash.new({
+            :provider => 'facebook',
+            :uid => '10101010',
+            :info => {
+              :nickname => 'NNeil',
+              :email => '',
+              :name => 'Neil Neil',
+              :first_name => 'Neil',
+              :last_name => 'Neil',
+              :image => 'http://graph.facebook.com/1234567/picture?type=square',
+              :urls => { :Facebook => 'http://www.facebook.com/jbloggs' },
+              :location => 'Palo Alto, California',
+              :verified => true
+            },
+            :credentials => {
+              :token => 'ABCDEF', # OAuth 2.0 access_token, which you may wish to store
+              :expires_at => 1321747205, # when the access token expires (it always will)
+              :expires => true # this will always be true
+            },
+            :extra => {
+              :raw_info => {
+                :id => '10101010',
+                :name => 'Neil Neil',
+                :first_name => 'Neil',
+                :last_name => 'Neil',
+                :link => 'http://www.facebook.com/jbloggs',
+                :username => 'NNeil',
+                :location => { :id => '123456789', :name => 'Palo Alto, California' },
+                :gender => 'male',
+                :email => '',
+                :timezone => -8,
+                :locale => 'en_US',
+                :verified => true,
+                :updated_time => '2011-11-11T06:21:03+0000'
+              }
+            }
+        })
+        visit '/'
+        click_link 'Sign up'
+        click_link 'Sign in with Facebook'
+        expect(page).to have_content 'Facebook can not be used to sign-in as they have not provided us with your email address. Please use another authentication provider or use local sign-up.'
+        expect(User.count).to eq 3
+      end
+    end
+  end
+
 end

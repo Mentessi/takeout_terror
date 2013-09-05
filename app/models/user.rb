@@ -6,14 +6,6 @@ class User < ActiveRecord::Base
          :recoverable, :rememberable, :trackable, :validatable,
          :omniauthable, :omniauth_providers => [:facebook,:google_oauth2]
 
-	def self.find_for_oauth(auth, signed_in_resource=nil)
-		User.where(:provider => auth.provider, :uid => auth.uid).first ||
-	  User.where(:email => auth[:extra][:raw_info][:email]).first ||
-	  User.create( name:auth.extra.raw_info.name,
-                 provider:auth.provider,
-                 uid:auth.uid,
-                 email:auth.info.email,
-                 password:Devise.friendly_token[0,20])
-	end
+  has_many :omniauth_identities, :dependent => :destroy
 	
 end
