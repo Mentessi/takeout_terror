@@ -21,6 +21,10 @@ class RegistrationsController < Devise::RegistrationsController
     end
   end
 
+  # def new_with_omniauth
+  #   render "new_with_omniauth"
+  # end
+
   private
 
   # check if we need password to update user data

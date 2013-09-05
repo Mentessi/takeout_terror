@@ -2,7 +2,16 @@ TakeoutTerror::Application.routes.draw do
 
   get "establishments/show"
   get "establishments/index"
-  devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks',                                   :registrations      => "registrations" }
+
+  # devise_scope :users do
+  #   get '/users/new_with_omniauth' => 'registrations#new_with_omniauth', as: 'complete_user_registration_with_omniauth'
+  #   # get "/some/route" => "some_devise_controller"
+  # end
+
+  devise_for :users, :controllers => { :omniauth_callbacks => 'users/omniauth_callbacks',                                   :registrations      => "registrations"} do
+    post '/users/new_with_omniauth' => 'users/omniauth_callbacks#new_with_omniauth', as: 'complete_user_registration_with_omniauth'
+  end
+  
   authenticated :user do
     get '/' => "users#show", as: "user_root"
   end

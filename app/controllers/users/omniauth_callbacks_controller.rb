@@ -6,8 +6,10 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   PROVIDERS = {
                 'facebook'      => 'Facebook', 
-                'google_oauth2' => 'Google'
+                'google_oauth2' => 'Google',
+                'twitter'       => 'Twitter'
               }
+
 
   def create
     auth = request.env["omniauth.auth"]
@@ -31,24 +33,38 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
           flash[:notice] = 'Sign in via ' + PROVIDERS[provider] + ' has been added to your account. Signed in successfully!'
           sign_in_and_redirect(:user, existing_user)
         else
-          new_user = User.create!( name:name, email:email, password:Devise.friendly_token[0,20])
-          new_user.omniauth_identities.create(:provider => provider, :uid => uid)
+          @provider = provider
+          @uid = uid
+          @user = User.new(name:name, email:email, password:Devise.friendly_token[0,20])
+          begin
+            @user.save!  
+          rescue ActiveRecord::RecordInvalid
+            render 'devise/registrations/new_with_omniauth'
+            # redirect_to complete_user_registration_with_omniauth_path
+            return
+          end
+          @user.omniauth_identities.create(:provider => provider, :uid => uid)
           flash[:notice] = 'Your account has been created via ' + PROVIDERS[provider] + '. In your profile you can change your personal information and amend your local password from the one we have randomly generated for you.'
-          sign_in_and_redirect(:user, new_user)
+          sign_in_and_redirect(:user, @user)
         end
       else
         flash[:error] = PROVIDERS[provider] + ' can not be used to sign-in as they have not provided us with your email address. Please use another authentication provider or use local sign-up.'
         redirect_to new_user_session_path
       end
     end
+  end
 
-    # if @user.persisted?
-    #   flash[:notice] = I18n.t "devise.omniauth_callbacks.success", :kind => PROVIDERS[(request.env["omniauth.auth"].provider)]
-    #   sign_in_and_redirect @user, :event => :authentication
-    # else
-    #   session["devise.omniauth_data"] = request.env["omniauth.auth"]
-    #   redirect_to new_user_registration_url
-    # end
+  def new_with_omniauth
+    @user = User.new(name: params[:user][:name], email: params[:user][:email], password: Devise.friendly_token[0,20])
+    @provider = params[:provider]
+    @uid = params[:uid]
+    if @user.save
+      @user.omniauth_identities.create(:provider => @provider, :uid => @uid)
+      flash[:notice] = 'Your account has been created via ' + PROVIDERS[@provider] + '. In your profile you can change your personal information and amend your local password from the one we have randomly generated for you.'
+      sign_in_and_redirect(:user, @user)
+    else
+      render 'devise/registrations/new_with_omniauth'
+    end
   end
 
 
