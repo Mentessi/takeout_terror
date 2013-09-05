@@ -16,3 +16,6 @@ This app requires the set up of the following environmental variables in order f
   * For sign in with Google
     * `GOOGLE_KEY` - containng the Client ID for OAuth2 Google+ api access
     * `GOOGLE_SECRET` - containng the Client Secret for OAuth2 Google+ api access
+  * For sign in with Twitter (ensure you enable 'Sign in with Twitter' in your app settings on Twitter)
+    * `TWITTER_KEY` - containing the 'Consumer key' for Twitter OAuth access
+    * `TWITTER_SECRET` - containing the 'Consumer secret' for Twitter OAuth access
