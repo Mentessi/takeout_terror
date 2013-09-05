@@ -57,6 +57,7 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
   def new_with_omniauth
     email = params[:user][:email]
     name = params[:user][:name]
+    password = params[:user][:password]
     @provider = params[:provider]
     @uid = params[:uid]
     
@@ -64,11 +65,15 @@ class Users::OmniauthCallbacksController < Devise::OmniauthCallbacksController
     # if found create new identity for the found user
     @user = User.find_by_email(email)
     if @user
-      # map this new login method via a service provider to an existing account if the email address is the same
-      # AND THE PASSWORD ENTERED MATCHES
-      @user.omniauth_identities.create(:provider => @provider, :uid => @uid)
-      flash[:notice] = 'Sign in via ' + PROVIDERS[@provider] + ' has been added to your account. Signed in successfully!'
-      sign_in_and_redirect(:user, @user)
+      if @user.valid_password?(password)
+        @user.omniauth_identities.create(:provider => @provider, :uid => @uid)
+        flash[:notice] = 'Sign in via ' + PROVIDERS[@provider] + ' has been added to your account. Signed in successfully!'
+        sign_in_and_redirect(:user, @user)
+      else
+        @user = User.new(name:name, email:email, password:Devise.friendly_token[0,20])
+        flash[:error] = 'Password incorrect!'
+        render 'devise/registrations/new_with_omniauth'
+      end
     else
       @user = User.new(name: name, email: email, password: Devise.friendly_token[0,20])
       if @user.save

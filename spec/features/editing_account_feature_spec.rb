@@ -2,7 +2,7 @@ require 'spec_helper'
 
 feature "Editing account" do
   before(:each) do
-    User.create!( :name => 'Mike Mike', 
+    @user = User.create!( :name => 'Mike Mike', 
                   :email => 'user34@example.com', 
                   :password => 'password',
                   :password_confirmation => 'password')
@@ -24,7 +24,7 @@ feature "Editing account" do
     end
   end
 
-  context "no password is entered" do
+  context "no current password is entered" do
     scenario "when changing the email address" do
       click_link 'Edit account'
       fill_in 'Email', :with => 'user36@example.com'
@@ -39,6 +39,12 @@ feature "Editing account" do
       fill_in 'Password confirmation', :with => 'newpassword'
       click_button 'Update'
       expect(page).to have_content 'You updated your account successfully.'
+      click_link 'Logout'
+      click_link 'Login'
+      fill_in 'Email', :with => 'user34@example.com'
+      fill_in 'Password', :with => 'newpassword'
+      click_button 'Sign in'
+      expect(page).to have_content 'Signed in successfully'
     end
 
     scenario "when changing account fields other than password and email" do
@@ -46,6 +52,8 @@ feature "Editing account" do
       fill_in 'Name', :with => 'New Name'
       click_button 'Update'
       expect(page).to have_content 'You updated your account successfully.'
+      @user.reload
+      @user.name.should == 'New Name'
     end
   end
 end

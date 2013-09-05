@@ -6,9 +6,17 @@ class RegistrationsController < Devise::RegistrationsController
     else
       # remove the virtual current_password attribute update_without_password
       # doesn't know how to ignore it
-      params[:user].delete(:current_password)
-      @user.update_without_password(devise_parameter_sanitizer.for(:account_update))
-      
+      # params[:user].delete(:current_password)
+      name = params[:user][:name]
+      email = params[:user][:email]
+      password = params[:user][:password]
+      password_confirmation = params[:user][:password_confirmation]
+
+      @user.name = name unless name.blank?
+      @user.password = password unless password.blank?
+      @user.password_confirmation = password_confirmation unless password_confirmation.blank?
+      @user.save
+      # @user.update_without_password(devise_parameter_sanitizer.for(:account_update))
     end
 
     if successfully_updated
