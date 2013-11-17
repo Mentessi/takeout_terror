@@ -8,5 +8,5 @@ class User < ActiveRecord::Base
 
   has_many :omniauth_identities, :dependent => :destroy
 	
-	has_many :visits
+	has_many :visits, :inverse_of => :user
 end
